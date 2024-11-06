@@ -1,6 +1,7 @@
 package com.dev.auth_services.controller;
 
 import com.dev.auth_services.custom.ApiResponse;
+import com.dev.auth_services.custom.LoginResponse;
 import com.dev.auth_services.dto.AuthRequest;
 import com.dev.auth_services.entity.User;
 import com.dev.auth_services.repository.UserRepository;
@@ -15,6 +16,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
@@ -39,7 +41,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<ApiResponse> getToken(@RequestBody User loginRequest) {
+    public ResponseEntity<LoginResponse> getToken(@RequestBody User loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -55,7 +57,7 @@ public class AuthController {
                 String generatedToken = authService.generateToken(loginRequest.getUsername());  // Replace with actual token generation
                 User user = userData.get();
 
-                ApiResponse response = new ApiResponse(
+                LoginResponse response = new LoginResponse(
                         200,
                         true,
                         "Login successful",
@@ -67,19 +69,19 @@ public class AuthController {
             }
 
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiResponse(401, false, "Authentication failed"));
+                    .body(new LoginResponse(401, false, "Authentication failed"));
 
         } catch (AuthenticationException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiResponse(401, false, "Authentication failed: " + e.getMessage()));
+                    .body(new LoginResponse(401, false, "Authentication failed: " + e.getMessage()));
         }
     }
 
     @GetMapping("/validate")
-    public ResponseEntity<ApiResponse> validateToken(@RequestParam("token") String token) {
+    public ResponseEntity<LoginResponse> validateToken(@RequestParam("token") String token) {
           authService.validateToken(token);
 
-        ApiResponse response = new ApiResponse(
+        LoginResponse response = new LoginResponse(
                 200,
                 true,
                 "Token is valid",
@@ -87,5 +89,26 @@ public class AuthController {
         );
 
         return ResponseEntity.ok(response);
+    }
+    @PostMapping("/logout")
+    public ApiResponse logout(@RequestHeader("Authorization") String token) {
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        authService.logout(token);
+        return new ApiResponse(200, true, "Logged out successfully.");
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<ApiResponse> changePassword(@RequestParam String userId, @RequestParam String oldPassword, @RequestParam String newPassword) {
+        boolean result = authService.changePassword(userId, oldPassword, newPassword);
+        if (result) {
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body(new ApiResponse(200, false, "Password changed successfully"));
+        } else {
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse(404, false, "Password changes failed"));
+        }
     }
 }

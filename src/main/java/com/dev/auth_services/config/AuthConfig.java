@@ -28,7 +28,7 @@ public class AuthConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**","/products/**").permitAll()
+                        .requestMatchers("/auth/**","/products/**","/teams/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session

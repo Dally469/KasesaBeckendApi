@@ -1,25 +1,35 @@
 package com.dev.auth_services.custom;
 
- public class ApiResponse {
+public class LoginResponse {
     private int status;
     private boolean success;
     private String message;
-    private Object data;  // Optional field for any additional data
+    private String token;
+    private Object data;
 
-    // Constructor for simple responses
-    public ApiResponse(int status, boolean success, String message) {
+    public LoginResponse(int status, boolean success, String message) {
         this.status = status;
         this.success = success;
         this.message = message;
     }
 
     // Constructor with data field
-    public ApiResponse(int status, boolean success, String message, Object data) {
+    public LoginResponse(int status, boolean success, String message, Object data) {
         this.status = status;
         this.success = success;
         this.message = message;
         this.data = data;
     }
+    // Constructor with data field
+    public LoginResponse(int status, boolean success, String message,String token, Object data) {
+        this.status = status;
+        this.success = success;
+        this.message = message;
+        this.token = token;
+        this.data = data;
+    }
+
+
 
 
     // Getters and setters
@@ -45,6 +55,12 @@ package com.dev.auth_services.custom;
 
     public void setMessage(String message) {
         this.message = message;
+    }
+    public String getToken() {
+        return token;
+    }
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public Object getData() {
