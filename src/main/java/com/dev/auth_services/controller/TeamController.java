@@ -27,6 +27,7 @@ public class TeamController {
     @Autowired
     private AuthService authService;
     @GetMapping
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
     public ResponseEntity<ApiResponse> getAllTeams() {
         try {
             List<Team> teams = teamService.getAllTeams();
@@ -39,6 +40,7 @@ public class TeamController {
     }
 
     @GetMapping("/{id}")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
     public ResponseEntity<ApiResponse> getTeamById(@PathVariable String id) {
         try {
             Team team = teamService.getTeamById(id)
@@ -55,6 +57,7 @@ public class TeamController {
     }
 
      @PostMapping
+     @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
     public ResponseEntity<ApiResponse> createTeam(@RequestBody Team team, @RequestHeader("Authorization") String token) {
         try {
              authService.validateToken(token); // Uncomment if using a real auth service
@@ -75,6 +78,7 @@ public class TeamController {
     }
 
     @PutMapping("/{id}")
+    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
     public ResponseEntity<ApiResponse> updateTeam(@PathVariable String id, @RequestBody Team teamDetails, @RequestHeader("Authorization") String token) {
         try {
              authService.validateToken(token); // Uncomment if using a real auth service
@@ -93,6 +97,7 @@ public class TeamController {
     }
 
      @DeleteMapping("/{id}")
+     @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
     public ResponseEntity<ApiResponse> deleteTeam(@PathVariable String id, @RequestHeader("Authorization") String token) {
         try {
             authService.validateToken(token); // Uncomment if using a real auth service

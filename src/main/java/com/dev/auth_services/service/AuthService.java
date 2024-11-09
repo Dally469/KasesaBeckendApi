@@ -1,9 +1,12 @@
 package com.dev.auth_services.service;
 
+import com.dev.auth_services.custom.ApiResponse;
 import com.dev.auth_services.custom.JwtBlacklist;
 import com.dev.auth_services.entity.User;
 import com.dev.auth_services.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +48,15 @@ public class AuthService {
 
 
     public boolean changePassword(String userId, String oldPassword, String newPassword) {
-        User user = userRepository.findById(UUID.fromString(userId)).orElse(null);
+        UUID userUUID;
+
+        try {
+            userUUID = UUID.fromString(userId);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Invalid UUID format for userId");
+        }
+
+        User user = userRepository.findById(userUUID).orElseThrow(() -> new RuntimeException("User not found"));
 
         if (user != null && passwordEncoder.matches(oldPassword, user.getPassword())) {
             user.setPassword(passwordEncoder.encode(newPassword));
