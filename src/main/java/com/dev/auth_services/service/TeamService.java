@@ -55,6 +55,10 @@ public class TeamService {
             team.setStatus(teamDetails.getStatus());
         }
 
+        if (teamDetails.getProfile() != null){
+            team.setProfile(teamDetails.getProfile());
+        }
+
         return teamRepository.save(team);
     }
     public boolean isPhoneNumberExists(String phone) {

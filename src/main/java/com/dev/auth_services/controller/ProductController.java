@@ -24,7 +24,6 @@ public class ProductController {
     private AuthService authService;
 
     @PostMapping("/add")
-    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
     public ResponseEntity<ApiResponse> addProduct(@RequestBody Product product, @RequestHeader("Authorization") String token) {
         try {
             authService.validateToken(token);  // Validate token without returning a boolean
@@ -38,13 +37,11 @@ public class ProductController {
     }
 
     @GetMapping("/all")
-    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
 
     @GetMapping("/product/{id}")
-    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
     public ResponseEntity<ApiResponse> getProductById(@PathVariable String id) {
         try {
             Product product = productService.getProductById(id);
@@ -60,7 +57,6 @@ public class ProductController {
     }
 
     @PutMapping("/update/{id}")
-    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
     public ResponseEntity<ApiResponse> updateProduct(@PathVariable String id, @RequestBody Product productDetails, @RequestHeader("Authorization") String token) {
         try {
             authService.validateToken(token);  // Validate token without returning a boolean
@@ -79,7 +75,6 @@ public class ProductController {
     }
 
     @DeleteMapping("/delete/{id}")
-    @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
     public ResponseEntity<ApiResponse> deleteProduct(@PathVariable String id, @RequestHeader("Authorization") String token) {
         try {
             authService.validateToken(token);  // Validate token without returning a boolean

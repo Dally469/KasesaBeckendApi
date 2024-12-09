@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/auth")
@@ -133,12 +134,21 @@ public class AuthController {
         }
     }
 
-    @GetMapping("/profile")
+    @GetMapping("/profile/{userId}")
     @CrossOrigin(origins = {"http://localhost:3000", "http://localhost:3001"})
-    public ResponseEntity<ApiResponse> getUserProfile() {
+    public ResponseEntity<ApiResponse> getUserProfile(@PathVariable String userId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = ((UserDetails) authentication.getPrincipal()).getUsername();
-        Optional<User> user = userRepository.findUserByUsername(username);
+
+        if (authentication == null || !authentication.isAuthenticated()) {
+            ApiResponse response = new ApiResponse(
+                    401,
+                    false,
+                    "Unauthorized"
+            );
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+        }
+
+        Optional<User> user = userRepository.findById(UUID.fromString(userId));
 
         if (user.isPresent()) {
             User userProfile = user.get();
@@ -158,4 +168,5 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
         }
     }
+
 }

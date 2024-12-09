@@ -24,6 +24,7 @@ public class Team {
     private String department;
     private String position;
     private String status;
+    private String profile;
     public UUID getId() {
         return id;
     }
@@ -78,6 +79,15 @@ public class Team {
 
     public void setStatus(String status) {
         this.status = status;
+
+    }
+
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
     }
 }
 
